@@ -1,0 +1,173 @@
+swagger: '2.0'
+
+info:
+  version: "0.0.0"
+  title: Nyancast API
+
+paths:
+  /search:
+    get:
+      description: |
+        Query Itunes search API and return found podcasts.
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: q
+          in: query
+          description: Search terms
+          required: true
+          type: string
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Podcast'
+        204:
+          description: No results
+        400:
+          description: Missing q parameter
+        503:
+          description: Problem contacting Itunes search API
+  
+  /podcast/{id}:
+    get:
+      description: |
+        Get informations about a podcast.
+        This can trigger an Itunes request if the podcast doesn't exists in the local database.
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Podcast'
+        400:
+          description: Missing/wrong parameter id
+        404:
+          description: No podcast found for specified id
+        503:
+          description: Problem contacting Itunes search API
+
+  /podcast/{id}/episodes:
+    get:
+      description: |
+        Get episodes of a podcast.
+        By default, the latest 20 episodes (if available) are sent to the client.
+      parameters:
+        - 
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+        - 
+          name: p
+          in: query
+          description: Page
+          required: false
+          type: integer
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Episode'
+        400:
+          description: Missing/wrong parameter id
+        404:
+          description: No podcast found for specified id
+  
+  /podcast/{id}/subscribe:
+    post:
+      description: |
+        Subscribe a user to a podcast.
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Subscription successful
+        304:
+          description: User is already subscribed to the podcast
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in
+        404:
+          description: No podcast found for specified id
+          
+  /podcast/{id}/unsubscribe:
+    post:
+      description: |
+        Unsubscribe a user to a podcast.
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Unsubscription successful
+        304:
+          description: User is not subscribed to the podcast
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in
+        404:
+          description: No podcast found for specified id
+          
+  /user/subscriptions:
+    get:
+      description: |
+        Get list of podcasts the user is subscribed to.
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Podcast'
+        204:
+          description: No subscriptions
+        401:
+          description: User is not logged in
+      
+
+definitions:
+  Podcast:
+    type: object
+    properties:
+      itunesId:
+        type: integer
+      title:
+        type: string
+      author:
+        type: string
+      thumbnailURL:
+        type: string
+
+  Episode:
+    type: object
+    properties:
+      title:
+        type: string
+      feedURL:
+        type: string
