@@ -2,7 +2,7 @@ swagger: '2.0'
 
 info:
   version: "0.0.0"
-  title: Nyancast API
+  title: Nyancast AP
 
 paths:
   /search:
@@ -149,8 +149,53 @@ paths:
           description: No subscriptions
         401:
           description: User is not logged in
-      
-
+  
+  /user:
+    get:
+      description: |
+        Get the current user
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                username:
+                  type: string
+    
+  /signup:
+    post:
+      description: |
+        Create a new user
+      responses:
+        200:
+          description: Successful response. New user has been created
+        400:
+          description: Missing/wrong parameter (username/password)
+            username must be greater or equals to 4 password must be
+            greater or equals to 8
+        409:
+          description: Username is already used
+          
+  /logout:
+    post:
+      description: |
+        Log out user
+      responses:
+        200:
+          description: Successful response. User is log out
+  /login:
+    post:
+      description:  |
+        Log in user already sign in
+      responses:
+        200:
+          description: Successful response. User is connected
+        400:
+          description: Username/password are invalid
+    
 definitions:
   Podcast:
     type: object
