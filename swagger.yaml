@@ -3,14 +3,20 @@ swagger: '2.0'
 info:
   version: "0.0.0"
   title: Nyancast API
-
+tags:
+  - name: podcast
+    description: Operations about podcasts
+  - name: episode
+    description: Operations about podcasts' episodes
+  - name: user
+    description: Operations about user
 paths:
   /search:
     get:
-      description: |
-        Query Itunes search API and return found podcasts.
+      tags:
+        - podcast
+      summary: Query Itunes search API and return found podcasts
       parameters:
-        # An example parameter that is in query and is required
         -
           name: q
           in: query
@@ -18,11 +24,8 @@ paths:
           required: true
           type: string
       responses:
-        # Response code
         200:
           description: Successful response
-          # A schema describing your response object.
-          # Use JSON Schema format
           schema:
             type: array
             items:
@@ -36,8 +39,10 @@ paths:
 
   /podcast/{id}:
     get:
+      tags:
+        - podcast
+      summary: Get informations about a podcast
       description: |
-        Get informations about a podcast.
         This can trigger an Itunes request if the podcast doesn't exists in the local database.
       parameters:
         -
@@ -60,8 +65,10 @@ paths:
 
   /podcast/{id}/episodes:
     get:
+      tags:
+        - episode
+      summary: Get episodes of a podcast
       description: |
-        Get episodes of a podcast.
         By default, the latest 20 episodes (if available) are sent to the client.
       parameters:
         -
@@ -90,8 +97,9 @@ paths:
 
   /podcast/{id}/subscribe:
     post:
-      description: |
-        Subscribe a user to a podcast.
+      tags:
+        - user
+      summary: Subscribe a user to a podcast
       parameters:
         -
           name: id
@@ -113,8 +121,9 @@ paths:
 
   /podcast/{id}/unsubscribe:
     post:
-      description: |
-        Unsubscribe a user to a podcast.
+      tags:
+        - user
+      summary: Unsubscribe a user to a podcast
       parameters:
         -
           name: id
@@ -133,11 +142,68 @@ paths:
           description: User is not logged in
         404:
           description: No podcast found for specified id
+          
+  /episode/{id}:
+    get:
+      tags:
+        - episode
+      summary: Get description of an episode
+      parameters:
+        -
+          name: id
+          in: path
+          description: Episode id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/EpisodeDetail'
+        400:
+          description: Missing/wrong parameter id
+        404:
+          description: No episode found for specified id
+
+  /episode/{id}/update_status:
+    post:
+      tags:
+        - episode
+      summary: Update playing status of an episode
+      description: |
+        User have to be logged in, and subscribed to the episodes' podcast.
+        Parameter status can be either "played" or "unplayed"
+      parameters:
+        -
+          name: id
+          in: path
+          description: Episode id
+          required: true
+          type: integer
+        - 
+          name: status
+          in: query
+          description: New playing status
+          required: true
+          type: string
+      responses:
+        200:
+          description: Status update successful
+        304:
+          description: Status unchanged
+        400:
+          description: Missing/wrong parameters, or user not subscribed to podcast
+        401:
+          description: User is not logged in
+        404:
+          description: No episode found for specified id
+        
 
   /user/subscriptions:
     get:
-      description: |
-        Get list of podcasts the user is subscribed to.
+      tags:
+        - user
+      summary: Get list of podcasts the user is subscribed to
       responses:
         200:
           description: Successful response
@@ -152,8 +218,9 @@ paths:
 
   /user:
     get:
-      description: |
-        Get the current user
+      tags:
+        - user
+      summary: Get the current user
       responses:
         200:
           description: Successful response
@@ -166,8 +233,9 @@ paths:
 
   /signup:
     post:
-      description: |
-        Create a new user
+      tags:
+        - user
+      summary: Create a new user
       parameters:
         -
           name: username
@@ -191,16 +259,18 @@ paths:
 
   /logout:
     post:
-      description: |
-        Log out user
+      tags:
+        - user
+      summary: Log out user
       responses:
         200:
           description: Successful response. User is log out
 
   /login:
     post:
-      description:  |
-        Log in user
+      tags:
+        - user
+      summary: Log in user
       parameters:
         -
           name: username
@@ -234,9 +304,17 @@ definitions:
   Episode:
     type: object
     properties:
+      id:
+        type: integer
       title:
         type: string
       feedURL:
+        type: string
+  
+  EpisodeDetail:
+    type: object
+    properties:
+      description:
         type: string
 
   User:
