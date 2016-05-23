@@ -2,7 +2,7 @@ swagger: '2.0'
 
 info:
   version: "0.0.0"
-  title: Nyancast AP
+  title: Nyancast API
 
 paths:
   /search:
@@ -168,13 +168,24 @@ paths:
     post:
       description: |
         Create a new user
+      parameters:
+        -
+          name: username
+          in: query
+          description: Username must be greater or equals to 4
+          required: true
+          type: string
+        -
+          name: password
+          in: query
+          description: Password must be greater or equals to 8
+          required: true
+          type: string
       responses:
         200:
           description: Successful response. New user has been created
         400:
           description: Missing/wrong parameter (username/password)
-            username must be greater or equals to 4 password must be
-            greater or equals to 8
         409:
           description: Username is already used
 
@@ -189,7 +200,18 @@ paths:
   /login:
     post:
       description:  |
-        Log in user already sign in
+        Log in user
+      parameters:
+        -
+          name: username
+          in: query
+          required: true
+          type: string
+        -
+          name: password
+          in: query
+          required: true
+          type: string
       responses:
         200:
           description: Successful response. User is connected
