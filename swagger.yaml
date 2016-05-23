@@ -157,13 +157,12 @@ paths:
       responses:
         200:
           description: Successful response
+        401:
+          description: User is not logged in
           schema:
             type: array
             items:
-              type: object
-              properties:
-                username:
-                  type: string
+              $ref: '#/definitions/User'
 
   /signup:
     post:
@@ -223,11 +222,3 @@ definitions:
     properties:
       username:
         type: string
-      salt:
-        type: string
-      passwordHash:
-        type: string
-      userType:
-        type: string
-      subscriptions:
-        type: array
