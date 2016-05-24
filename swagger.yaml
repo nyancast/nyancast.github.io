@@ -182,7 +182,21 @@ paths:
           description: User is not logged in
         404:
           description: No episode found for specified id
-        
+
+  /user:
+    get:
+      tags:
+        - user
+      summary: Get the current user
+      responses:
+        200:
+          description: Successful response
+        401:
+          description: User is not logged in
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
 
   /user/subscriptions:
     get:
@@ -201,22 +215,7 @@ paths:
         401:
           description: User is not logged in
 
-  /user:
-    get:
-      tags:
-        - user
-      summary: Get the current user
-      responses:
-        200:
-          description: Successful response
-        401:
-          description: User is not logged in
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
-
-  /signup:
+  /user/signup:
     post:
       tags:
         - user
@@ -242,7 +241,7 @@ paths:
         409:
           description: Username is already used
 
-  /logout:
+  /user/logout:
     post:
       tags:
         - user
@@ -251,7 +250,7 @@ paths:
         200:
           description: Successful response. User is log out
 
-  /login:
+  /user/login:
     post:
       tags:
         - user
