@@ -29,7 +29,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Podcast'
+              $ref: '#/definitions/PodcastList'
         204:
           description: No results
         400:
@@ -44,6 +44,7 @@ paths:
       summary: Get informations about a podcast
       description: |
         This can trigger an Itunes request if the podcast doesn't exists in the local database.
+        Property "isSubscribed" is only present in response when user is logged in
       parameters:
         -
           name: id
@@ -66,10 +67,11 @@ paths:
   /podcast/{id}/episodes:
     get:
       tags:
-        - episode
+        - podcast
       summary: Get episodes of a podcast
       description: |
         By default, the latest 20 episodes (if available) are sent to the client.
+        Property "isPlayed" is only present in response when user is logged in
       parameters:
         -
           name: id
@@ -87,9 +89,14 @@ paths:
         200:
           description: Successful response
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Episode'
+            type: object
+            properties:
+              moreToLoad:
+                type: boolean
+              episodes:
+                type: array
+                items:
+                  $ref: '#/definitions/Episode'
         400:
           description: Missing/wrong parameter id
         404:
@@ -98,7 +105,7 @@ paths:
   /podcast/{id}/subscribe:
     post:
       tags:
-        - user
+        - podcast
       summary: Subscribe a user to a podcast
       parameters:
         -
@@ -122,7 +129,7 @@ paths:
   /podcast/{id}/unsubscribe:
     post:
       tags:
-        - user
+        - podcast
       summary: Unsubscribe a user to a podcast
       parameters:
         -
@@ -142,28 +149,6 @@ paths:
           description: User is not logged in
         404:
           description: No podcast found for specified id
-          
-  /episode/{id}:
-    get:
-      tags:
-        - episode
-      summary: Get description of an episode
-      parameters:
-        -
-          name: id
-          in: path
-          description: Episode id
-          required: true
-          type: integer
-      responses:
-        200:
-          description: Successful response
-          schema:
-            $ref: '#/definitions/EpisodeDetail'
-        400:
-          description: Missing/wrong parameter id
-        404:
-          description: No episode found for specified id
 
   /episode/{id}/update_status:
     post:
@@ -210,7 +195,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Podcast'
+              $ref: '#/definitions/PodcastList'
         204:
           description: No subscriptions
         401:
@@ -289,7 +274,7 @@ paths:
           description: Username/password are invalid
 
 definitions:
-  Podcast:
+  PodcastList:
     type: object
     properties:
       itunesId:
@@ -301,6 +286,24 @@ definitions:
       thumbnailURL:
         type: string
 
+  Podcast:
+    type: object
+    properties:
+      itunesId:
+        type: integer
+      title:
+        type: string
+      author:
+        type: string
+      thumbnailURL:
+        type: string
+      description:
+        type: string
+      websiteURL:
+        type: string
+      isSubscribed:
+        type: boolean
+
   Episode:
     type: object
     properties:
@@ -308,14 +311,15 @@ definitions:
         type: integer
       title:
         type: string
-      feedURL:
+      fileURL:
         type: string
-  
-  EpisodeDetail:
-    type: object
-    properties:
       description:
         type: string
+      date:
+        type: string
+      isPlayed:
+        type: boolean
+        
 
   User:
     type: object
