@@ -157,7 +157,6 @@ paths:
       summary: Update playing status of an episode
       description: |
         User have to be logged in, and subscribed to the episodes' podcast.
-        Parameter status can be either "played" or "unplayed"
       parameters:
         -
           name: id
@@ -171,6 +170,7 @@ paths:
           description: New playing status
           required: true
           type: string
+          enum: [played, unplayed]
       responses:
         200:
           description: Status update successful
