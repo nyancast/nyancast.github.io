@@ -72,8 +72,8 @@ paths:
       description: |
         By default, the latest 20 episodes (if available) are sent to the client.
         Property "playingStatus" is only present in response when user is logged in.
-        Also values of playingStatus are PLAYED, UNPLAYED, PLAYING.
-        In the case of playingStatus equals to PLAYING there is a field playingTimer. 
+        Also values of playingStatus are "PLAYED", "UNPLAYED", "PLAYING".
+        In the case of playingStatus equals to "PLAYING" there is a field playingTimer. 
       parameters:
         -
           name: id
