@@ -71,7 +71,9 @@ paths:
       summary: Get episodes of a podcast
       description: |
         By default, the latest 20 episodes (if available) are sent to the client.
-        Property "isPlayed" is only present in response when user is logged in
+        Property "playingStatus" is only present in response when user is logged in.
+        Also values of playingStatus are PLAYED, UNPLAYED, PLAYING.
+        In the case of playingStatus equals to PLAYING there is a field playingTimer. 
       parameters:
         -
           name: id
@@ -164,13 +166,19 @@ paths:
           description: Episode id
           required: true
           type: integer
+        -
+          name: playingTimer
+          in: query
+          description: Playing timer
+          required: false
+          type: integer
         - 
           name: status
           in: query
           description: New playing status
           required: true
           type: string
-          enum: [played, unplayed]
+          enum: [played, unplayed, playing]
       responses:
         200:
           description: Status update successful
@@ -284,8 +292,6 @@ definitions:
         type: string
       thumbnailURL:
         type: string
-      notPlayedEpisodes:
-        type: integer
 
   Podcast:
     type: object
@@ -318,9 +324,10 @@ definitions:
         type: string
       date:
         type: string
-      isPlayed:
-        type: boolean
-        
+      playingStatus:
+        type: string
+      playingTimer:
+        type: integer
 
   User:
     type: object
