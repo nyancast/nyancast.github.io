@@ -72,8 +72,11 @@ paths:
       description: |
         By default, the latest 20 episodes (if available) are sent to the client.
         Property "playingStatus" is only present in response when user is logged in.
-        Also values of playingStatus are "PLAYED", "UNPLAYED", "PLAYING".
-        In the case of playingStatus equals to "PLAYING" there is a field playingTimer. 
+
+        Values of "playingStatus" can be "PLAYED", "UNPLAYED", "PLAYING".
+        If playingStatus equals to "PLAYING" property "playingTimer" is also present.
+
+        Property "duration" might not be present, if unavailable from RSS feed
       parameters:
         -
           name: id
@@ -322,8 +325,11 @@ definitions:
         type: string
       date:
         type: string
+      duration:
+        type: integer
       playingStatus:
         type: string
+        enum: [PLAYED, UNPLAYED, PLAYING]
       playingTimer:
         type: integer
 
