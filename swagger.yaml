@@ -29,7 +29,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PodcastList'
+              $ref: '#/definitions/PodcastListSearch'
         204:
           description: No results
         400:
@@ -218,7 +218,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PodcastList'
+              $ref: '#/definitions/PodcastListSub'
         204:
           description: No subscriptions
         401:
@@ -282,7 +282,7 @@ paths:
           description: Username/password are invalid
 
 definitions:
-  PodcastList:
+  PodcastListSearch:
     type: object
     properties:
       itunesId:
@@ -293,6 +293,20 @@ definitions:
         type: string
       thumbnailURL:
         type: string
+
+  PodcastListSub:
+    type: object
+    properties:
+      itunesId:
+        type: integer
+      title:
+        type: string
+      author:
+        type: string
+      thumbnailURL:
+        type: string
+      notPlayedEpisodes:
+        type: integer
 
   Podcast:
     type: object
