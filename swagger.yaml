@@ -199,12 +199,10 @@ paths:
       responses:
         200:
           description: Successful response
+          schema:
+            $ref: '#/definitions/User'
         401:
           description: User is not logged in
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
 
   /user/subscriptions:
     get:
