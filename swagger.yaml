@@ -10,6 +10,8 @@ tags:
     description: Operations about podcasts' episodes
   - name: user
     description: Operations about user
+  - name: admin
+    description: Admin operations
 paths:
   /search:
     get:
@@ -36,6 +38,22 @@ paths:
           description: Missing q parameter
         503:
           description: Problem contacting Itunes search API
+          
+  /promotions:
+    get:
+      tags:
+        - podcast
+      summary: Get promoted podcasts
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PodcastListSearch'
+        204:
+          description: No promoted podcasts
+
 
   /podcast/{id}:
     get:
@@ -154,6 +172,31 @@ paths:
           description: User is not logged in
         404:
           description: No podcast found for specified id
+          
+  /podcast/{id}/promote:
+    post:
+      tags:
+        - admin
+      summary: Promote a podcast to front page
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Promotion successful
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in
+        403:
+          description: User doesn't have the right to do this
+        404:
+          description: No podcast found for specified id
+          
 
   /episode/{id}/update_status:
     post:
