@@ -5,11 +5,11 @@ info:
   title: Nyancast API
 tags:
   - name: podcast
-    description: Operations about podcasts
+    description: Podcast operations
   - name: episode
-    description: Operations about podcasts' episodes
+    description: Podcasts' episode operations 
   - name: user
-    description: Operations about user
+    description: User operations
   - name: admin
     description: Admin operations
 paths:
@@ -173,7 +173,7 @@ paths:
         404:
           description: No podcast found for specified id
           
-  /podcast/{id}/promote:
+  /podcast/{id}/promotion:
     post:
       tags:
         - admin
@@ -196,6 +196,29 @@ paths:
           description: User doesn't have the right to do this
         404:
           description: No podcast found for specified id
+    delete:
+      tags:
+        - admin
+      summary: Delete a front page promotion
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Promotion removal successful
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in
+        403:
+          description: User doesn't have the right to do this
+        404:
+          description: No podcast found for specified id
+      
           
 
   /episode/{id}/update_status:
