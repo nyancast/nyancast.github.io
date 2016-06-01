@@ -50,7 +50,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PodcastListSearch'
+              $ref: '#/definitions/Podcast'
         204:
           description: No promoted podcasts
 
@@ -321,6 +321,8 @@ paths:
       responses:
         200:
           description: Successful response. User is connected
+          schema:
+            $ref: '#/definitions/User'
         403:
           description: Username/password are invalid
 
