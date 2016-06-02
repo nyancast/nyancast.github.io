@@ -322,6 +322,8 @@ paths:
       responses:
         200:
           description: Successful response. User is log out
+        401:
+          description: User is not logged in
 
   /user/login:
     post:
