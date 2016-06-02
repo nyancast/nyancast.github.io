@@ -191,9 +191,7 @@ paths:
         400:
           description: Missing/wrong parameter id
         401:
-          description: User is not logged in
-        403:
-          description: User doesn't have the right to do this
+          description: User is not logged in/doesn't have the right to do this
         404:
           description: No podcast found for specified id
     delete:
@@ -210,12 +208,12 @@ paths:
       responses:
         200:
           description: Promotion removal successful
+        304:
+          description: Promotion doesn't exist
         400:
           description: Missing/wrong parameter id
         401:
-          description: User is not logged in
-        403:
-          description: User doesn't have the right to do this
+          description: User is not logged in/doesn't have the right to do this
         404:
           description: No podcast found for specified id
       
