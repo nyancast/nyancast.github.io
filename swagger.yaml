@@ -5,11 +5,13 @@ info:
   title: Nyancast API
 tags:
   - name: podcast
-    description: Operations about podcasts
+    description: Podcast operations
   - name: episode
-    description: Operations about podcasts' episodes
+    description: Podcasts' episode operations 
   - name: user
-    description: Operations about user
+    description: User operations
+  - name: admin
+    description: Admin operations
 paths:
   /search:
     get:
@@ -36,6 +38,22 @@ paths:
           description: Missing q parameter
         503:
           description: Problem contacting Itunes search API
+          
+  /promotions:
+    get:
+      tags:
+        - podcast
+      summary: Get promoted podcasts
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Podcast'
+        204:
+          description: No promoted podcasts
+
 
   /podcast/{id}:
     get:
@@ -73,10 +91,10 @@ paths:
         By default, the latest 20 episodes (if available) are sent to the client.
         Property "playingStatus" is only present in response when user is logged in.
 
-        Values of "playingStatus" can be "PLAYED", "UNPLAYED", "PLAYING".
-        If playingStatus equals to "PLAYING" property "playingTimer" is also present.
+        Values of "playingStatus" can be "played", "unplayed", "playing".
+        If playingStatus equals to "playing" property "playingTimer" is also present.
 
-        Property "duration" might not be present, if unavailable from RSS feed
+        Property "duration" might not be present, if unavailable from RSS feed.
       parameters:
         -
           name: id
@@ -154,6 +172,52 @@ paths:
           description: User is not logged in
         404:
           description: No podcast found for specified id
+          
+  /podcast/{id}/promotion:
+    post:
+      tags:
+        - admin
+      summary: Promote a podcast to front page
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Promotion successful
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in/doesn't have the right to do this
+        404:
+          description: No podcast found for specified id
+    delete:
+      tags:
+        - admin
+      summary: Delete a front page promotion
+      parameters:
+        -
+          name: id
+          in: path
+          description: Itunes podcast id
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Promotion removal successful
+        304:
+          description: Promotion doesn't exist
+        400:
+          description: Missing/wrong parameter id
+        401:
+          description: User is not logged in/doesn't have the right to do this
+        404:
+          description: No podcast found for specified id
+      
+          
 
   /episode/{id}/update_status:
     post:
@@ -258,6 +322,8 @@ paths:
       responses:
         200:
           description: Successful response. User is log out
+        401:
+          description: User is not logged in
 
   /user/login:
     post:
@@ -278,6 +344,8 @@ paths:
       responses:
         200:
           description: Successful response. User is connected
+          schema:
+            $ref: '#/definitions/User'
         403:
           description: Username/password are invalid
 
@@ -343,7 +411,7 @@ definitions:
         type: integer
       playingStatus:
         type: string
-        enum: [PLAYED, UNPLAYED, PLAYING]
+        enum: [played, unplayed, playing]
       playingTimer:
         type: integer
 
@@ -352,3 +420,6 @@ definitions:
     properties:
       username:
         type: string
+      type:
+        type: string
+        enum: [user, admin]
